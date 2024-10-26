@@ -4,13 +4,13 @@ x-postgres-common: &postgres-common
   user: postgres
   restart: always
   healthcheck:
-    test: 'pg_isready -U user --dbname=postgres'
+    test: "pg_isready -U user --dbname=postgres"
     interval: 10s
     timeout: 5s
     retries: 5
 
 services:
-  zstart_postgres_user:
+  hello_zero_solid_postgres_user:
     <<: *postgres-common
     ports:
       - ${UPSTREAM_DB_PORT}:5432
@@ -26,10 +26,10 @@ services:
       -c hot_standby=on 
       -c hot_standby_feedback=on
     volumes:
-      - zstart_pgdata_user:/var/lib/postgresql/data
+      - hello_zero_solid_pgdata_user:/var/lib/postgresql/data
       - ./:/docker-entrypoint-initdb.d
 
-  zstart_postgres_zero:
+  hello_zero_solid_postgres_zero:
     <<: *postgres-common
     ports:
       - ${ZERO_DB_PORT}:5432
@@ -45,10 +45,10 @@ services:
       -c hot_standby=on 
       -c hot_standby_feedback=on
     volumes:
-      - zstart_pgdata_zero:/var/lib/postgresql/data
+      - hello_zero_solid_pgdata_zero:/var/lib/postgresql/data
 
 volumes:
-  zstart_pgdata_user:
+  hello_zero_solid_pgdata_user:
     driver: local
-  zstart_pgdata_zero:
+  hello_zero_solid_pgdata_zero:
     driver: local

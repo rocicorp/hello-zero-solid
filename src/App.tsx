@@ -1,63 +1,84 @@
-import { useState, MouseEvent } from "react";
 import Cookies from "js-cookie";
-import { useQuery, useZero } from "@rocicorp/zero/react";
-import { escapeLike } from "@rocicorp/zero";
+import { useQuery } from "@rocicorp/zero/solid";
+import { escapeLike, Zero } from "@rocicorp/zero";
 import { Schema } from "./schema";
 import { randomMessage } from "./test-data";
 import { randInt } from "./rand";
-import { useInterval } from "./use-interval";
 import { formatDate } from "./date";
+import { createEffect, createSignal, For, Show } from "solid-js";
 
-function App() {
-  const z = useZero<Schema>();
-  const users = useQuery(z.query.user);
-  const mediums = useQuery(z.query.medium);
+function App({ z }: { z: Zero<Schema> }) {
+  const users = useQuery(() => z.query.user);
+  const mediums = useQuery(() => z.query.medium);
 
-  const [filterUser, setFilterUser] = useState<string>("");
-  const [filterText, setFilterText] = useState<string>("");
+  const [filterUser, setFilterUser] = createSignal<string>("");
+  const [filterMedium, setFilterMedium] = createSignal<string>("");
+  const [filterText, setFilterText] = createSignal<string>("");
+  const [filterDate, setFilterDate] = createSignal<string>("");
+  const allMessages = useQuery(() => z.query.message);
 
-  const all = z.query.message;
-  const allMessages = useQuery(all);
+  const filteredMessages = useQuery(() => {
+    let filtered = z.query.message
+      .related("medium", (medium) => medium.one())
+      .related("sender", (sender) => sender.one());
 
-  let filtered = all
-    .related("medium", (medium) => medium.one())
-    .related("sender", (sender) => sender.one());
+    if (filterUser()) {
+      filtered = filtered.where("senderID", filterUser());
+    }
 
-  if (filterUser) {
-    filtered = filtered.where("senderID", filterUser);
-  }
+    if (filterMedium()) {
+      filtered = filtered.where("mediumID", filterMedium());
+    }
 
-  if (filterText) {
-    filtered = filtered.where("body", "LIKE", `%${escapeLike(filterText)}%`);
-  }
+    if (filterText()) {
+      filtered = filtered.where(
+        "body",
+        "LIKE",
+        `%${escapeLike(filterText())}%`
+      );
+    }
 
-  const filteredMessages = useQuery(filtered);
+    if (filterDate()) {
+      filtered = filtered.where(
+        "timestamp",
+        ">=",
+        new Date(filterDate()).getTime()
+      );
+    }
+    return filtered;
+  });
 
-  const hasFilters = filterUser || filterText;
-  const [action, setAction] = useState<"add" | "remove" | undefined>(undefined);
-
-  useInterval(
-    () => {
-      if (!handleAction()) {
-        setAction(undefined);
-      }
-    },
-    action !== undefined ? 1000 / 60 : null
+  const hasFilters = () =>
+    filterUser || filterMedium || filterText || filterDate;
+  const [action, setAction] = createSignal<"add" | "remove" | undefined>(
+    undefined
   );
 
+  createEffect(() => {
+    if (action() !== undefined) {
+      const interval = setInterval(() => {
+        if (!handleAction()) {
+          clearInterval(interval);
+          setAction(undefined);
+        }
+      }, 1000 / 60);
+    }
+  });
+
   const handleAction = () => {
-    if (action === undefined) {
+    if (action() === undefined) {
       return false;
     }
-    if (action === "add") {
-      z.mutate.message.create(randomMessage(users, mediums));
+    if (action() === "add") {
+      z.mutate.message.create(randomMessage(users(), mediums()));
       return true;
     } else {
-      if (allMessages.length === 0) {
+      const messages = allMessages();
+      if (messages.length === 0) {
         return false;
       }
-      const index = randInt(allMessages.length);
-      z.mutate.message.delete({ id: allMessages[index].id });
+      const index = randInt(messages.length);
+      z.mutate.message.delete({ id: messages[index].id });
       return true;
     }
   };
@@ -105,15 +126,14 @@ function App() {
   };
 
   // If initial sync hasn't completed, these can be empty.
-  if (!users.length || !mediums.length) {
-    return null;
-  }
+  const initialSyncComplete = () => users().length && mediums().length;
 
-  const user = users.find((user) => user.id === z.userID)?.name ?? "anon";
+  const user = () =>
+    users().find((user) => user.id === z.userID)?.name ?? "anon";
 
   return (
-    <>
-      <div className="controls">
+    <Show when={initialSyncComplete()}>
+      <div class="controls">
         <div>
           <button onMouseDown={addMessages} onMouseUp={stopAction}>
             Add Messages
@@ -125,30 +145,39 @@ function App() {
         </div>
         <div
           style={{
-            justifyContent: "end",
+            "justify-content": "end",
           }}
         >
-          {user === "anon" ? "" : `Logged in as ${user}`}
+          {user() === "anon" ? "" : `Logged in as ${user()}`}
           <button onMouseDown={() => toggleLogin()}>
-            {user === "anon" ? "Login" : "Logout"}
+            {user() === "anon" ? "Login" : "Logout"}
           </button>
         </div>
       </div>
-      <div className="controls">
+      <div class="controls">
         <div>
           From:
           <select
             onChange={(e) => setFilterUser(e.target.value)}
             style={{ flex: 1 }}
           >
-            <option key={""} value="">
-              Sender
-            </option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.name}
-              </option>
-            ))}
+            <option value="">Sender</option>
+            <For each={users()}>
+              {(user) => <option value={user.id}>{user.name}</option>}
+            </For>
+          </select>
+        </div>
+        <div>
+          By:
+          <select
+            onChange={(e) => setFilterMedium(e.target.value)}
+            style={{ flex: 1 }}
+          >
+            <option value="">Medium</option>
+
+            <For each={mediums()}>
+              {(medium) => <option value={medium.id}>{medium.name}</option>}
+            </For>
           </select>
         </div>
         <div>
@@ -160,14 +189,22 @@ function App() {
             style={{ flex: 1 }}
           />
         </div>
+        <div>
+          After:
+          <input
+            type="date"
+            onChange={(e) => setFilterDate(e.target.value)}
+            style={{ flex: 1 }}
+          />
+        </div>
       </div>
-      <div className="controls">
+      <div class="controls">
         <em>
-          {!hasFilters ? (
-            <>Showing all {filteredMessages.length} messages</>
+          {!hasFilters() ? (
+            <>Showing all {filteredMessages().length} messages</>
           ) : (
             <>
-              Showing {filteredMessages.length} of {allMessages.length}{" "}
+              Showing {filteredMessages().length} of {allMessages().length}{" "}
               messages. Try opening{" "}
               <a href="/" target="_blank">
                 another tab
@@ -177,12 +214,12 @@ function App() {
           )}
         </em>
       </div>
-      {filteredMessages.length === 0 ? (
+      {filteredMessages().length === 0 ? (
         <h3>
           <em>No posts found 😢</em>
         </h3>
       ) : (
-        <table border={1} cellSpacing={0} cellPadding={6} width="100%">
+        <table class="messages">
           <thead>
             <tr>
               <th>Sender</th>
@@ -193,25 +230,27 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {filteredMessages.map((message) => (
-              <tr key={message.id}>
-                <td align="left">{message.sender?.name}</td>
-                <td align="left">{message.medium?.name}</td>
-                <td align="left">{message.body}</td>
-                <td align="right">{formatDate(message.timestamp)}</td>
-                <td
-                  onMouseDown={(e) =>
-                    editMessage(e, message.id, message.senderID, message.body)
-                  }
-                >
-                  ✏️
-                </td>
-              </tr>
-            ))}
+            <For each={filteredMessages()}>
+              {(message) => (
+                <tr>
+                  <td>{message.sender?.name}</td>
+                  <td>{message.medium?.name}</td>
+                  <td>{message.body}</td>
+                  <td>{formatDate(message.timestamp)}</td>
+                  <td
+                    onMouseDown={(e) =>
+                      editMessage(e, message.id, message.senderID, message.body)
+                    }
+                  >
+                    ✏️
+                  </td>
+                </tr>
+              )}
+            </For>
           </tbody>
         </table>
       )}
-    </>
+    </Show>
   );
 }
 
