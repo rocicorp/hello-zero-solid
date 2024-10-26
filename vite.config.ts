@@ -1,16 +1,23 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import solid from "vite-plugin-solid";
 import { getRequestListener } from "@hono/node-server";
 import { app } from "./api/index.js";
 
 export default defineConfig({
   optimizeDeps: {
     esbuildOptions: {
-      target: "es2022",
+      supported: {
+        "top-level-await": true,
+      },
+    },
+  },
+  esbuild: {
+    supported: {
+      "top-level-await": true,
     },
   },
   plugins: [
-    react(),
+    solid(),
     {
       name: "api-server",
       configureServer(server) {

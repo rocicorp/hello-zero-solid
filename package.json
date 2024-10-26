@@ -1,5 +1,5 @@
 {
-  "name": "zapp",
+  "name": "hello-zero-solid",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,25 +15,20 @@
     "@rocicorp/zero": "^0.3.2024102600",
     "jose": "^5.9.6",
     "js-cookie": "^3.0.5",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "solid-js": "^1.9.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@hono/node-server": "^1.13.2",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.7.9",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
     "dotenv": "^16.4.5",
     "eslint": "^9.9.0",
-    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
     "hono": "^4.6.6",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "vite-plugin-solid": "^2.10.2"
   }
 }

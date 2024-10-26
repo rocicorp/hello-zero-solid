@@ -1,8 +1,7 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+/* @refresh reload */
+import { render } from "solid-js/web";
 import App from "./App.tsx";
 import "./index.css";
-import { ZeroProvider } from "@rocicorp/zero/react";
 import { Zero } from "@rocicorp/zero";
 import { schema } from "./schema.ts";
 import Cookies from "js-cookie";
@@ -12,20 +11,18 @@ const encodedJWT = Cookies.get("jwt");
 const decodedJWT = encodedJWT && decodeJwt(encodedJWT);
 const userID = decodedJWT?.sub ? (decodedJWT.sub as string) : "anon";
 
+console.log({ userID, encodedJWT, decodedJWT });
+
 const z = new Zero({
   userID,
   auth: encodedJWT,
   server: import.meta.env.VITE_PUBLIC_SERVER,
   schema,
-  // This is often easier to develop with if you're frequently changing
-  // the schema. Switch to 'idb' for local-persistence.
+  // This is easier to develop with until we make the persistent state
+  // delete itself on schema changes. Just remove to get persistent storage.
   kvStore: "mem",
 });
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <ZeroProvider zero={z}>
-      <App />
-    </ZeroProvider>
-  </StrictMode>
-);
+const root = document.getElementById("root");
+
+render(() => <App z={z} />, root!);
