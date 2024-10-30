@@ -17,10 +17,10 @@ export default defineConfig<AuthData, Schema>(schema, (query) => {
   };
 
   return {
-    upstreamDBConnStr: must(process.env.UPSTREAM_DB),
-    cvrDBConnStr: must(process.env.ZERO_DB),
-    changeDBConnStr: must(process.env.ZERO_DB),
-    replicaDBFile: must(process.env.ZERO_REPLICA_DB_FILE),
+    upstreamDBConnStr: must(process.env.ZSTART_SOLID_DB),
+    cvrDBConnStr: must(process.env.ZSTART_SOLID_DB),
+    changeDBConnStr: must(process.env.ZSTART_SOLID_DB),
+    replicaDBFile: must(process.env.ZSTART_SOLID_REPLICA_DB_FILE),
     jwtSecret: must(process.env.JWT_SECRET),
 
     numSyncWorkers: undefined, // this means numCores - 1
