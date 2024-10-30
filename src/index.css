@@ -58,13 +58,26 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-td {
+table.messages {
+  width: 100%;
+  border-spacing: 0px;
+  border-collapse: separate;
+}
+
+table.messages td {
   white-space: nowrap;
   overflow: none;
   text-overflow: ellipsis;
 }
 
-td:last-child {
+table.messages td,
+table.messages th {
+  text-align: left;
+  border: 1px solid grey;
+  padding: 6px;
+}
+
+table.messages td:last-child {
   cursor: pointer;
 }
 
