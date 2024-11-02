@@ -5,7 +5,11 @@
 // See https://github.com/rocicorp/mono/blob/main/apps/zbugs/src/domain/schema.ts
 // for more complex examples, including many-to-many.
 
-import { createSchema, createTableSchema, SchemaToRow } from "@rocicorp/zero";
+import {
+  createSchema,
+  createTableSchema,
+  TableSchema,
+} from "@rocicorp/zero/schema";
 
 const userSchema = createTableSchema({
   tableName: "user",
