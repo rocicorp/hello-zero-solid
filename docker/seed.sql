@@ -1,5 +1,11 @@
 DROP TABLE IF EXISTS "user", "medium", "message";
 
+CREATE DATABASE zstart_solid;
+CREATE DATABASE zstart_solid_cvr;
+CREATE DATABASE zstart_solid_cdb;
+
+\c zstart_solid;
+
 CREATE TABLE "user" (
   "id" VARCHAR PRIMARY KEY,
   "name" VARCHAR NOT NULL,
