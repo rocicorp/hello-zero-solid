@@ -20,7 +20,8 @@ function App({ z }: { z: Zero<Schema> }) {
   const filteredMessages = useQuery(() => {
     let filtered = z.query.message
       .related("medium", (medium) => medium.one())
-      .related("sender", (sender) => sender.one());
+      .related("sender", (sender) => sender.one())
+      .orderBy("timestamp", "desc");
 
     if (filterUser()) {
       filtered = filtered.where("senderID", filterUser());
@@ -70,7 +71,7 @@ function App({ z }: { z: Zero<Schema> }) {
       return false;
     }
     if (action() === "add") {
-      z.mutate.message.create(randomMessage(users(), mediums()));
+      z.mutate.message.insert(randomMessage(users(), mediums()));
       return true;
     } else {
       const messages = allMessages();
