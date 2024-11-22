@@ -80,25 +80,28 @@ type AuthData = {
   sub: string;
 };
 
-defineAuthorization<AuthData, Schema>(schema, (query) => {
-  const allowIfLoggedIn = (authData: AuthData) =>
-    query.user.where("id", "=", authData.sub);
+export const authorization = defineAuthorization<AuthData, Schema>(
+  schema,
+  (query) => {
+    const allowIfLoggedIn = (authData: AuthData) =>
+      query.user.where("id", "=", authData.sub);
 
-  const allowIfMessageSender = (authData: AuthData, row: Message) => {
-    return query.message
-      .where("id", row.id)
-      .where("senderID", "=", authData.sub);
-  };
-  return {
-    message: {
-      row: {
-        // anyone can insert
-        insert: undefined,
-        // only sender can edit their own messages
-        update: [allowIfMessageSender],
-        // must be logged in to delete
-        delete: [allowIfLoggedIn],
+    const allowIfMessageSender = (authData: AuthData, row: Message) => {
+      return query.message
+        .where("id", row.id)
+        .where("senderID", "=", authData.sub);
+    };
+    return {
+      message: {
+        row: {
+          // anyone can insert
+          insert: undefined,
+          // only sender can edit their own messages
+          update: [allowIfMessageSender],
+          // must be logged in to delete
+          delete: [allowIfLoggedIn],
+        },
       },
-    },
-  };
-});
+    };
+  }
+);
