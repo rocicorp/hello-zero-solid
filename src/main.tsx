@@ -11,11 +11,9 @@ const encodedJWT = Cookies.get("jwt");
 const decodedJWT = encodedJWT && decodeJwt(encodedJWT);
 const userID = decodedJWT?.sub ? (decodedJWT.sub as string) : "anon";
 
-console.log({ userID, encodedJWT, decodedJWT });
-
 const z = createZero({
   userID,
-  auth: encodedJWT,
+  auth: () => encodedJWT,
   server: import.meta.env.VITE_PUBLIC_SERVER,
   schema,
   // This is easier to develop with until we make the persistent state
