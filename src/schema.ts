@@ -8,55 +8,51 @@
 import {
   createSchema,
   createTableSchema,
-  defineAuthorization,
+  definePermissions,
+  ExpressionBuilder,
+  TableSchema,
   TableSchemaToRow,
 } from "@rocicorp/zero";
 
 const userSchema = createTableSchema({
   tableName: "user",
   columns: {
-    id: { type: "string" },
-    name: { type: "string" },
-    partner: { type: "boolean" },
+    id: "string",
+    name: "string",
+    partner: "boolean",
   },
-  primaryKey: ["id"],
-  relationships: {},
+  primaryKey: "id",
 });
 
 const mediumSchema = createTableSchema({
   tableName: "medium",
   columns: {
-    id: { type: "string" },
-    name: { type: "string" },
+    id: "string",
+    name: "string",
   },
-  primaryKey: ["id"],
-  relationships: {},
+  primaryKey: "id",
 });
 
 const messageSchema = createTableSchema({
   tableName: "message",
   columns: {
-    id: { type: "string" },
-    senderID: { type: "string" },
-    mediumID: { type: "string" },
-    body: { type: "string" },
-    timestamp: { type: "number" },
+    id: "string",
+    senderID: "string",
+    mediumID: "string",
+    body: "string",
+    timestamp: "number",
   },
-  primaryKey: ["id"],
+  primaryKey: "id",
   relationships: {
     sender: {
-      source: "senderID",
-      dest: {
-        schema: () => userSchema,
-        field: "id",
-      },
+      sourceField: "senderID",
+      destSchema: userSchema,
+      destField: "id",
     },
     medium: {
-      source: "mediumID",
-      dest: {
-        schema: () => mediumSchema,
-        field: "id",
-      },
+      sourceField: "mediumID",
+      destSchema: mediumSchema,
+      destField: "id",
     },
   },
 });
@@ -77,31 +73,38 @@ export type User = TableSchemaToRow<typeof schema.tables.user>;
 
 // The contents of your decoded JWT.
 type AuthData = {
-  sub: string;
+  sub: string | null;
 };
 
-export const authorization = defineAuthorization<AuthData, Schema>(
-  schema,
-  (query) => {
-    const allowIfLoggedIn = (authData: AuthData) =>
-      query.user.where("id", "=", authData.sub);
+export const permissions = definePermissions<AuthData, Schema>(schema, () => {
+  const allowIfLoggedIn = (
+    authData: AuthData,
+    { cmpLit }: ExpressionBuilder<TableSchema>
+  ) => cmpLit(authData.sub, "IS NOT", null);
 
-    const allowIfMessageSender = (authData: AuthData, row: Message) => {
-      return query.message
-        .where("id", row.id)
-        .where("senderID", "=", authData.sub);
-    };
-    return {
-      message: {
-        row: {
-          // anyone can insert
-          insert: undefined,
-          // only sender can edit their own messages
-          update: [allowIfMessageSender],
-          // must be logged in to delete
-          delete: [allowIfLoggedIn],
+  const allowIfMessageSender = (
+    authData: AuthData,
+    { cmp }: ExpressionBuilder<typeof messageSchema>
+  ) => {
+    return cmp("senderID", "=", authData.sub ?? "foo");
+  };
+  return {
+    message: {
+      row: {
+        // anyone can insert
+        insert: undefined,
+        // only sender can edit their own messages
+        update: {
+          preMutation: [allowIfMessageSender],
         },
+        // must be logged in to delete
+        delete: [allowIfLoggedIn],
       },
-    };
-  }
-);
+    },
+  };
+});
+
+export default {
+  schema,
+  permissions,
+};

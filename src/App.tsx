@@ -15,6 +15,7 @@ function App({ z }: { z: Zero<Schema> }) {
   const [filterMedium, setFilterMedium] = createSignal<string>("");
   const [filterText, setFilterText] = createSignal<string>("");
   const [filterDate, setFilterDate] = createSignal<string>("");
+
   const allMessages = useQuery(() => z.query.message);
 
   const filteredMessages = useQuery(() => {
@@ -50,7 +51,7 @@ function App({ z }: { z: Zero<Schema> }) {
   });
 
   const hasFilters = () =>
-    filterUser || filterMedium || filterText || filterDate;
+    filterUser() || filterMedium() || filterText() || filterDate();
   const [action, setAction] = createSignal<"add" | "remove" | undefined>(
     undefined
   );
