@@ -4,11 +4,11 @@
 git clone git@github.com:rocicorp/hello-zero-solid.git
 cd hello-zero-solid
 npm install
-npm run docker-up
+npm run dev:db-up
 
 # in a second terminal
-npx zero-cache
+npm run dev:zero-cache
 
 # in yet another terminal
-npm run dev
+npm run dev:ui
 ```
