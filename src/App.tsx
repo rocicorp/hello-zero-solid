@@ -1,13 +1,14 @@
 import { Zero } from "@rocicorp/zero";
 import { useQuery } from "@rocicorp/zero/solid";
+import { createEffect } from "solid-js";
 import { Schema } from "./schema";
 
 function App({ z }: { z: Zero<Schema> }) {
   const message = useQuery(() => z.query.message.one());
 
-  // createEffect(() => {
-  //   console.log(message());
-  // });
+  createEffect(() => {
+    console.log(message());
+  });
 
   return (
     <>
