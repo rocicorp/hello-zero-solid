@@ -13,7 +13,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@rocicorp/zero": "^0.10.2024122404",
+    "@rocicorp/zero": "file:rocicorp-zero-0.10.2025010500+85e3f0.tgz",
     "jose": "^5.9.6",
     "js-cookie": "^3.0.5",
     "solid-js": "^1.9.3"
