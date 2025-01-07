@@ -1,11 +1,11 @@
-import Cookies from "js-cookie";
-import { useQuery } from "@rocicorp/zero/solid";
 import { escapeLike, Zero } from "@rocicorp/zero";
+import { useQuery } from "@rocicorp/zero/solid";
+import Cookies from "js-cookie";
+import { createEffect, createSignal, For, Show } from "solid-js";
+import { formatDate } from "./date";
+import { randInt } from "./rand";
 import { Schema } from "./schema";
 import { randomMessage } from "./test-data";
-import { randInt } from "./rand";
-import { formatDate } from "./date";
-import { createEffect, createSignal, For, Show } from "solid-js";
 
 function App({ z }: { z: Zero<Schema> }) {
   const users = useQuery(() => z.query.user);
@@ -16,8 +16,10 @@ function App({ z }: { z: Zero<Schema> }) {
   const [filterText, setFilterText] = createSignal<string>("");
   const [filterDate, setFilterDate] = createSignal<string>("");
 
-  const allMessages = useQuery(() => z.query.message);
+  // You either need to do the extra indirection here...
+  const allMessages = () => useQuery(() => z.query.message)()[0];
 
+  // ... or when you use it.
   const filteredMessages = useQuery(() => {
     let filtered = z.query.message
       .related("medium", (medium) => medium.one())
@@ -72,7 +74,7 @@ function App({ z }: { z: Zero<Schema> }) {
       return false;
     }
     if (action() === "add") {
-      z.mutate.message.insert(randomMessage(users(), mediums()));
+      z.mutate.message.insert(randomMessage(users()[0], mediums()[0]));
       return true;
     } else {
       const messages = allMessages();
@@ -128,10 +130,10 @@ function App({ z }: { z: Zero<Schema> }) {
   };
 
   // If initial sync hasn't completed, these can be empty.
-  const initialSyncComplete = () => users().length && mediums().length;
+  const initialSyncComplete = () => users()[0].length && mediums()[0].length;
 
   const user = () =>
-    users().find((user) => user.id === z.userID)?.name ?? "anon";
+    users()[0].find((user) => user.id === z.userID)?.name ?? "anon";
 
   return (
     <Show when={initialSyncComplete()}>
@@ -164,7 +166,7 @@ function App({ z }: { z: Zero<Schema> }) {
             style={{ flex: 1 }}
           >
             <option value="">Sender</option>
-            <For each={users()}>
+            <For each={users()[0]}>
               {(user) => <option value={user.id}>{user.name}</option>}
             </For>
           </select>
@@ -177,7 +179,7 @@ function App({ z }: { z: Zero<Schema> }) {
           >
             <option value="">Medium</option>
 
-            <For each={mediums()}>
+            <For each={mediums()[0]}>
               {(medium) => <option value={medium.id}>{medium.name}</option>}
             </For>
           </select>
@@ -203,10 +205,10 @@ function App({ z }: { z: Zero<Schema> }) {
       <div class="controls">
         <em>
           {!hasFilters() ? (
-            <>Showing all {filteredMessages().length} messages</>
+            <>Showing all {filteredMessages()[0].length} messages</>
           ) : (
             <>
-              Showing {filteredMessages().length} of {allMessages().length}{" "}
+              Showing {filteredMessages()[0].length} of {allMessages().length}{" "}
               messages. Try opening{" "}
               <a href="/" target="_blank">
                 another tab
@@ -216,7 +218,7 @@ function App({ z }: { z: Zero<Schema> }) {
           )}
         </em>
       </div>
-      {filteredMessages().length === 0 ? (
+      {filteredMessages()[0].length === 0 ? (
         <h3>
           <em>No posts found 😢</em>
         </h3>
@@ -232,7 +234,7 @@ function App({ z }: { z: Zero<Schema> }) {
             </tr>
           </thead>
           <tbody>
-            <For each={filteredMessages()}>
+            <For each={filteredMessages()[0]}>
               {(message) => (
                 <tr>
                   <td>{message.sender?.name}</td>
