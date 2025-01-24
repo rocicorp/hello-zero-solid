@@ -20,8 +20,8 @@ function App({ z }: { z: Zero<Schema> }) {
 
   const [filteredMessages] = useQuery(() => {
     let filtered = z.query.message
-      .related("medium", (medium) => medium.one())
-      .related("sender", (sender) => sender.one())
+      .related("medium")
+      .related("sender")
       .orderBy("timestamp", "desc");
 
     if (filterUser()) {
