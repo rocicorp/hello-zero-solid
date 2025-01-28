@@ -31,5 +31,13 @@
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
     "vite-plugin-solid": "^2.10.2"
+  },
+  "trustedDependencies": [
+    "@rocicorp/zero-sqlite3"
+  ],
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@rocicorp/zero-sqlite3"
+    ]
   }
 }
