@@ -37,8 +37,8 @@ const medium = table("medium")
 const message = table("message")
   .columns({
     id: string(),
-    senderID: string(),
-    mediumID: string(),
+    senderID: string().from("sender_id"),
+    mediumID: string().from("medium_id"),
     body: string(),
     timestamp: number(),
   })
