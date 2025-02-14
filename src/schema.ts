@@ -11,7 +11,6 @@ import {
   ExpressionBuilder,
   Row,
   ANYONE_CAN,
-  NOBODY_CAN,
   table,
   string,
   boolean,
@@ -87,31 +86,26 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
   return {
     medium: {
       row: {
-        insert: NOBODY_CAN,
-        update: {
-          preMutation: NOBODY_CAN,
-        },
-        delete: NOBODY_CAN,
+        select: ANYONE_CAN,
       },
     },
     user: {
       row: {
-        insert: NOBODY_CAN,
-        update: {
-          preMutation: NOBODY_CAN,
-        },
-        delete: NOBODY_CAN,
+        select: ANYONE_CAN,
       },
     },
     message: {
       row: {
         insert: ANYONE_CAN,
-        // only sender can edit their own messages
         update: {
+          // only sender can edit their own messages
           preMutation: [allowIfMessageSender],
+          // sender can only set messages to be from themselves
+          postMutation: [allowIfMessageSender],
         },
         // must be logged in to delete
         delete: [allowIfLoggedIn],
+        select: ANYONE_CAN,
       },
     },
   };
