@@ -16,6 +16,7 @@ import {
   boolean,
   relationships,
   number,
+  PermissionsConfig,
 } from "@rocicorp/zero";
 
 const user = table("user")
@@ -108,7 +109,7 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
         select: ANYONE_CAN,
       },
     },
-  };
+  } satisfies PermissionsConfig<AuthData, Schema>;
 });
 
 export default {
