@@ -16,9 +16,7 @@ const z = createZero({
   auth: () => encodedJWT,
   server: import.meta.env.VITE_PUBLIC_SERVER,
   schema,
-  // This is easier to develop with until we make the persistent state
-  // delete itself on schema changes. Just remove to get persistent storage.
-  kvStore: "mem",
+  kvStore: "idb",
 });
 
 const root = document.getElementById("root");
