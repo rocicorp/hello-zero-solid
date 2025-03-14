@@ -8,15 +8,15 @@ import { formatDate } from "./date";
 import { createEffect, createSignal, For, Show } from "solid-js";
 
 function App({ z }: { z: Zero<Schema> }) {
-  const [users] = useQuery(() => z.query.user);
-  const [mediums] = useQuery(() => z.query.medium);
+  const [users] = useQuery(() => z.query.user, { ttl: "forever" });
+  const [mediums] = useQuery(() => z.query.medium, { ttl: "forever" });
 
   const [filterUser, setFilterUser] = createSignal<string>("");
   const [filterMedium, setFilterMedium] = createSignal<string>("");
   const [filterText, setFilterText] = createSignal<string>("");
   const [filterDate, setFilterDate] = createSignal<string>("");
 
-  const [allMessages] = useQuery(() => z.query.message);
+  const [allMessages] = useQuery(() => z.query.message, { ttl: "forever" });
 
   const [filteredMessages] = useQuery(() => {
     let filtered = z.query.message
