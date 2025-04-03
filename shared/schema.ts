@@ -8,16 +8,17 @@
 import {
   createSchema,
   definePermissions,
-  ExpressionBuilder,
   Row,
   ANYONE_CAN,
   table,
   string,
   boolean,
   relationships,
-  number,
   PermissionsConfig,
+  UpdateValue,
+  number,
 } from "@rocicorp/zero";
+import { AuthData } from "./auth";
 
 const user = table("user")
   .columns({
@@ -64,26 +65,11 @@ export const schema = createSchema({
 
 export type Schema = typeof schema;
 export type Message = Row<typeof schema.tables.message>;
+export type MessageUpdate = UpdateValue<typeof schema.tables.message>;
 export type Medium = Row<typeof schema.tables.medium>;
 export type User = Row<typeof schema.tables.user>;
 
-// The contents of your decoded JWT.
-type AuthData = {
-  sub: string | null;
-};
-
 export const permissions = definePermissions<AuthData, Schema>(schema, () => {
-  const allowIfLoggedIn = (
-    authData: AuthData,
-    { cmpLit }: ExpressionBuilder<Schema, keyof Schema["tables"]>
-  ) => cmpLit(authData.sub, "IS NOT", null);
-
-  const allowIfMessageSender = (
-    authData: AuthData,
-    { cmp }: ExpressionBuilder<Schema, "message">
-  ) => {
-    return cmp("senderID", "=", authData.sub ?? "foo");
-  };
   return {
     medium: {
       row: {
@@ -97,15 +83,6 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
     },
     message: {
       row: {
-        insert: ANYONE_CAN,
-        update: {
-          // only sender can edit their own messages
-          preMutation: [allowIfMessageSender],
-          // sender can only set messages to be from themselves
-          postMutation: [allowIfMessageSender],
-        },
-        // must be logged in to delete
-        delete: [allowIfLoggedIn],
         select: ANYONE_CAN,
       },
     },
