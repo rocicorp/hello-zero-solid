@@ -1,13 +1,14 @@
 import Cookies from "js-cookie";
 import { useQuery } from "@rocicorp/zero/solid";
 import { escapeLike, Zero } from "@rocicorp/zero";
-import { Schema } from "./schema";
+import { Schema } from "../shared/schema";
 import { randomMessage } from "./test-data";
 import { randInt } from "./rand";
 import { formatDate } from "./date";
 import { createEffect, createSignal, For, Show } from "solid-js";
+import { Mutators } from "../shared/mutators";
 
-function App({ z }: { z: Zero<Schema> }) {
+function App({ z }: { z: Zero<Schema, Mutators> }) {
   const [users] = useQuery(() => z.query.user, { ttl: "forever" });
   const [mediums] = useQuery(() => z.query.medium, { ttl: "forever" });
 
@@ -72,7 +73,7 @@ function App({ z }: { z: Zero<Schema> }) {
       return false;
     }
     if (action() === "add") {
-      z.mutate.message.insert(randomMessage(users(), mediums()));
+      z.mutate.message.create(randomMessage(users(), mediums()));
       return true;
     } else {
       const messages = allMessages();
@@ -80,7 +81,7 @@ function App({ z }: { z: Zero<Schema> }) {
         return false;
       }
       const index = randInt(messages.length);
-      z.mutate.message.delete({ id: messages[index].id });
+      z.mutate.message.delete(messages[index].id);
       return true;
     }
   };

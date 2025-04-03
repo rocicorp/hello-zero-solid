@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 import { getRequestListener } from "@hono/node-server";
-import { app } from "./api/index.js";
+import { app } from "./server/index.js";
 
 export default defineConfig({
   optimizeDeps: {
@@ -19,7 +19,7 @@ export default defineConfig({
   plugins: [
     solid(),
     {
-      name: "api-server",
+      name: "server",
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
           if (!req.url?.startsWith("/api")) {

@@ -1,5 +1,5 @@
 import { randBetween, randID, randInt } from "./rand";
-import { Medium, Message, User } from "./schema";
+import { Medium, Message, User } from "../shared/schema";
 
 const requests = [
   "Hey guys, is the zero package ready yet?",
