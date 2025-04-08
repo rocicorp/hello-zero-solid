@@ -28,7 +28,7 @@ app.post(
       );
     }
     const [, jwt] = parts;
-    return validateAndDecodeAuthData(jwt + "foo", secretKey);
+    return validateAndDecodeAuthData(jwt, secretKey);
   }),
   async (c) => {
     return await c.json(
