@@ -1,12 +1,12 @@
-import Cookies from "js-cookie";
-import { useQuery } from "@rocicorp/zero/solid";
 import { escapeLike, Zero } from "@rocicorp/zero";
-import { Schema } from "../shared/schema";
-import { randomMessage } from "./test-data";
-import { randInt } from "./rand";
-import { formatDate } from "./date";
+import { useQuery } from "@rocicorp/zero/solid";
+import Cookies from "js-cookie";
 import { createEffect, createSignal, For, Show } from "solid-js";
 import { Mutators } from "../shared/mutators";
+import { Schema } from "../shared/schema";
+import { formatDate } from "./date";
+import { randInt } from "./rand";
+import { randomMessage } from "./test-data";
 
 function App({ z }: { z: Zero<Schema, Mutators> }) {
   const [users] = useQuery(() => z.query.user, { ttl: "forever" });
@@ -21,8 +21,8 @@ function App({ z }: { z: Zero<Schema, Mutators> }) {
 
   const [filteredMessages] = useQuery(() => {
     let filtered = z.query.message
-      .related("medium", (q) => q.one())
-      .related("sender", (q) => q.one())
+      .related("medium")
+      .related("sender")
       .orderBy("timestamp", "desc");
 
     if (filterUser()) {
@@ -188,7 +188,7 @@ function App({ z }: { z: Zero<Schema, Mutators> }) {
           <input
             type="text"
             placeholder="message"
-            onChange={(e) => setFilterText(e.target.value)}
+            onInput={(e) => setFilterText(e.target.value)}
             style={{ flex: 1 }}
           />
         </div>
@@ -196,7 +196,7 @@ function App({ z }: { z: Zero<Schema, Mutators> }) {
           After:
           <input
             type="date"
-            onChange={(e) => setFilterDate(e.target.value)}
+            onInput={(e) => setFilterDate(e.target.value)}
             style={{ flex: 1 }}
           />
         </div>

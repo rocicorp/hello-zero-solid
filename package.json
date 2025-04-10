@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@rocicorp/zero": "0.18.2025040300",
+    "drizzle-orm": "^0.41.0",
+    "drizzle-zero": "^0.6.1",
     "jose": "^5.9.6",
     "js-cookie": "^3.0.5",
     "postgres": "^3.4.5",
@@ -27,7 +29,8 @@
     "@types/aws-lambda": "8.10.147",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.7.9",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
+    "drizzle-kit": "^0.30.6",
     "eslint": "^9.9.0",
     "globals": "^15.9.0",
     "hono": "^4.6.6",

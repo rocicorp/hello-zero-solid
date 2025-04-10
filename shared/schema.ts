@@ -6,61 +6,35 @@
 // for more complex examples, including many-to-many.
 
 import {
-  createSchema,
-  definePermissions,
-  Row,
   ANYONE_CAN,
-  table,
-  string,
-  boolean,
-  relationships,
+  definePermissions,
   PermissionsConfig,
+  Row,
   UpdateValue,
-  number,
 } from "@rocicorp/zero";
+import { createZeroSchema } from "drizzle-zero";
 import { AuthData } from "./auth";
+import * as drizzleSchema from "./drizzle/schema.ts";
 
-const user = table("user")
-  .columns({
-    id: string(),
-    name: string(),
-    partner: boolean(),
-  })
-  .primaryKey("id");
-
-const medium = table("medium")
-  .columns({
-    id: string(),
-    name: string(),
-  })
-  .primaryKey("id");
-
-const message = table("message")
-  .columns({
-    id: string(),
-    senderID: string().from("sender_id"),
-    mediumID: string().from("medium_id"),
-    body: string(),
-    timestamp: number(),
-  })
-  .primaryKey("id");
-
-const messageRelationships = relationships(message, ({ one }) => ({
-  sender: one({
-    sourceField: ["senderID"],
-    destField: ["id"],
-    destSchema: user,
-  }),
-  medium: one({
-    sourceField: ["mediumID"],
-    destField: ["id"],
-    destSchema: medium,
-  }),
-}));
-
-export const schema = createSchema({
-  tables: [user, medium, message],
-  relationships: [messageRelationships],
+export const schema = createZeroSchema(drizzleSchema, {
+  tables: {
+    user: {
+      id: true,
+      name: true,
+      partner: true,
+    },
+    medium: {
+      id: true,
+      name: true,
+    },
+    message: {
+      id: true,
+      senderID: true,
+      mediumID: true,
+      body: true,
+      timestamp: true,
+    },
+  },
 });
 
 export type Schema = typeof schema;
