@@ -1,4 +1,3 @@
-import { relations } from "drizzle-orm";
 import {
   boolean,
   foreignKey,
@@ -40,8 +39,3 @@ export const medium = pgTable("medium", {
   id: varchar().primaryKey().notNull(),
   name: varchar().notNull(),
 });
-
-export const messageRelations = relations(message, ({ one }) => ({
-  sender: one(user, { fields: [message.senderID], references: [user.id] }),
-  medium: one(medium, { fields: [message.mediumID], references: [medium.id] }),
-}));

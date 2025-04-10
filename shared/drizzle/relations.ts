@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm/relations";
 import { medium, message, user } from "./schema";
 
 export const messageRelations = relations(message, ({ one }) => ({
-  user: one(user, {
+  sender: one(user, {
     fields: [message.senderID],
     references: [user.id],
   }),

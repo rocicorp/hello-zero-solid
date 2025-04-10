@@ -14,28 +14,32 @@ import {
 } from "@rocicorp/zero";
 import { createZeroSchema } from "drizzle-zero";
 import { AuthData } from "./auth";
+import * as drizzleRelations from "./drizzle/relations.ts";
 import * as drizzleSchema from "./drizzle/schema.ts";
 
-export const schema = createZeroSchema(drizzleSchema, {
-  tables: {
-    user: {
-      id: true,
-      name: true,
-      partner: true,
+export const schema = createZeroSchema(
+  { ...drizzleSchema, ...drizzleRelations },
+  {
+    tables: {
+      user: {
+        id: true,
+        name: true,
+        partner: true,
+      },
+      medium: {
+        id: true,
+        name: true,
+      },
+      message: {
+        id: true,
+        senderID: true,
+        mediumID: true,
+        body: true,
+        timestamp: true,
+      },
     },
-    medium: {
-      id: true,
-      name: true,
-    },
-    message: {
-      id: true,
-      senderID: true,
-      mediumID: true,
-      body: true,
-      timestamp: true,
-    },
-  },
-});
+  }
+);
 
 export type Schema = typeof schema;
 export type Message = Row<typeof schema.tables.message>;
