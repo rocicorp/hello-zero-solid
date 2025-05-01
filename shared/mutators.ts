@@ -14,7 +14,7 @@ export function createMutators(authData: AuthData | undefined) {
       },
       async update(tx, message: MessageUpdate) {
         const auth = mustBeLoggedIn(authData);
-        const prev = await tx.query.message.where("id", message.id).one().run();
+        const prev = await tx.query.message.where("id", message.id).one();
         if (!prev) {
           return;
         }

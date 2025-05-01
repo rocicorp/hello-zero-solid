@@ -31,9 +31,7 @@ app.post(
     return validateAndDecodeAuthData(jwt, secretKey);
   }),
   async (c) => {
-    return await c.json(
-      await handlePush(c.req.valid("header"), c.req.query(), await c.req.json())
-    );
+    return await c.json(await handlePush(c.req.valid("header"), c.req.raw));
   }
 );
 
