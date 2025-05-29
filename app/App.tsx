@@ -9,15 +9,15 @@ import { createEffect, createSignal, For, Show } from "solid-js";
 import { Mutators } from "../shared/mutators";
 
 function App({ z }: { z: Zero<Schema, Mutators> }) {
-  const [users] = createQuery(() => z.query.user, { ttl: "forever" });
-  const [mediums] = createQuery(() => z.query.medium, { ttl: "forever" });
+  const [users] = createQuery(() => z.query.user, { ttl: "5m" });
+  const [mediums] = createQuery(() => z.query.medium, { ttl: "5m" });
 
   const [filterUser, setFilterUser] = createSignal<string>("");
   const [filterMedium, setFilterMedium] = createSignal<string>("");
   const [filterText, setFilterText] = createSignal<string>("");
   const [filterDate, setFilterDate] = createSignal<string>("");
 
-  const [allMessages] = createQuery(() => z.query.message, { ttl: "forever" });
+  const [allMessages] = createQuery(() => z.query.message, { ttl: "5m" });
 
   const [filteredMessages] = createQuery(() => {
     let filtered = z.query.message
