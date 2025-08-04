@@ -1,5 +1,5 @@
 import { escapeLike, Zero } from "@rocicorp/zero";
-import { createQuery } from "@rocicorp/zero/solid";
+import { useQuery } from "@rocicorp/zero/solid";
 import Cookies from "js-cookie";
 import { createEffect, createSignal, For, Show } from "solid-js";
 import { Mutators } from "../shared/mutators";
@@ -9,17 +9,17 @@ import { randInt } from "./rand";
 import { randomMessage } from "./test-data";
 
 function App({ z }: { z: Zero<Schema, Mutators> }) {
-  const [users] = createQuery(() => z.query.user, { ttl: "5m" });
-  const [mediums] = createQuery(() => z.query.medium, { ttl: "5m" });
+  const [users] = useQuery(() => z.query.user);
+  const [mediums] = useQuery(() => z.query.medium);
 
   const [filterUser, setFilterUser] = createSignal<string>("");
   const [filterMedium, setFilterMedium] = createSignal<string>("");
   const [filterText, setFilterText] = createSignal<string>("");
   const [filterDate, setFilterDate] = createSignal<string>("");
 
-  const [allMessages] = createQuery(() => z.query.message, { ttl: "5m" });
+  const [allMessages] = useQuery(() => z.query.message);
 
-  const [filteredMessages] = createQuery(() => {
+  const [filteredMessages] = useQuery(() => {
     let filtered = z.query.message
       .related("medium", (q) => q.one())
       .related("sender", (q) => q.one())
