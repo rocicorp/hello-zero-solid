@@ -1,5 +1,4 @@
-import { escapeLike, Zero } from "@rocicorp/zero";
-import { useQuery } from "@rocicorp/zero/solid";
+import { useQuery, useZero } from "@rocicorp/zero/solid";
 import Cookies from "js-cookie";
 import { createEffect, createSignal, For, Show } from "solid-js";
 import { Mutators } from "../shared/mutators";
@@ -7,49 +6,29 @@ import { Schema } from "../shared/schema";
 import { formatDate } from "./date";
 import { randInt } from "./rand";
 import { randomMessage } from "./test-data";
+import { queries } from "../shared/queries";
 
-function App({ z }: { z: Zero<Schema, Mutators> }) {
-  const [users] = useQuery(() => z.query.user);
-  const [mediums] = useQuery(() => z.query.medium);
+function App() {
+  const z = useZero<Schema, Mutators>()();
+
+  const [users] = useQuery(queries.users);
+  const [mediums] = useQuery(queries.mediums);
 
   const [filterUser, setFilterUser] = createSignal<string>("");
   const [filterMedium, setFilterMedium] = createSignal<string>("");
   const [filterText, setFilterText] = createSignal<string>("");
   const [filterDate, setFilterDate] = createSignal<string>("");
 
-  const [allMessages] = useQuery(() => z.query.message);
+  const [allMessages] = useQuery(queries.messages);
 
-  const [filteredMessages] = useQuery(() => {
-    let filtered = z.query.message
-      .related("medium", (q) => q.one())
-      .related("sender", (q) => q.one())
-      .orderBy("timestamp", "desc");
-
-    if (filterUser()) {
-      filtered = filtered.where("senderID", filterUser());
-    }
-
-    if (filterMedium()) {
-      filtered = filtered.where("mediumID", filterMedium());
-    }
-
-    if (filterText()) {
-      filtered = filtered.where(
-        "body",
-        "LIKE",
-        `%${escapeLike(filterText())}%`
-      );
-    }
-
-    if (filterDate()) {
-      filtered = filtered.where(
-        "timestamp",
-        ">=",
-        new Date(filterDate()).getTime()
-      );
-    }
-    return filtered;
-  });
+  const [filteredMessages] = useQuery(() =>
+    queries.filteredMessages({
+      senderID: filterUser(),
+      mediumID: filterMedium(),
+      body: filterText(),
+      timestamp: filterDate(),
+    })
+  );
 
   const hasFilters = () =>
     filterUser() || filterMedium() || filterText() || filterDate();

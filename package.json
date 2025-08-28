@@ -13,13 +13,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@rocicorp/zero": "0.22.2025072901",
+    "@rocicorp/zero": "0.23.2025090100",
     "jose": "^5.9.6",
     "js-cookie": "^3.0.5",
     "postgres": "^3.4.5",
     "solid-js": "^1.9.3",
     "sst": "3.9.26",
-    "zod": "^3.24.2"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
