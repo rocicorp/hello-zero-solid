@@ -17,6 +17,7 @@ import {
   PermissionsConfig,
   UpdateValue,
   number,
+  createBuilder,
 } from "@rocicorp/zero";
 import { AuthData } from "./auth";
 
@@ -89,7 +90,4 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
   } satisfies PermissionsConfig<AuthData, Schema>;
 });
 
-export default {
-  schema,
-  permissions,
-};
+export const builder = createBuilder(schema);

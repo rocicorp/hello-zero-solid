@@ -6,6 +6,7 @@ import { handleLogin } from "./login";
 import { handlePush } from "./push";
 import { validateAndDecodeAuthData } from "../shared/auth";
 import { must } from "../shared/must";
+import { handleGetQueries } from "./get-queries";
 
 export const app = new Hono().basePath("/api");
 
@@ -14,8 +15,9 @@ const secretKey = new TextEncoder().encode(
 );
 
 app.get("/login", (c) => handleLogin(c, secretKey));
+
 app.post(
-  "/push",
+  "/mutate",
   validator("header", (v) => {
     const auth = v["authorization"];
     if (!auth) {
@@ -34,5 +36,9 @@ app.post(
     return await c.json(await handlePush(c.req.valid("header"), c.req.raw));
   }
 );
+
+app.post("/get-queries", async (c) => {
+  return await c.json(await handleGetQueries(c.req.raw));
+});
 
 export default handle(app);
