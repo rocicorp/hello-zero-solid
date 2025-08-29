@@ -14,7 +14,8 @@ CREATE TABLE "message" (
   "sender_id" VARCHAR REFERENCES "user"(id),
   "medium_id" VARCHAR REFERENCES "medium"(id),
   "body" VARCHAR NOT NULL,
-  "timestamp" TIMESTAMP not null
+  "timestamp" TIMESTAMP not null,
+  "t" TIME not null
 );
 
 INSERT INTO "user" (id, name, partner) VALUES ('ycD76wW4R2', 'Aaron', true);

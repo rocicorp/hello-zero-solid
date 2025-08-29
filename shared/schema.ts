@@ -43,6 +43,7 @@ const message = table("message")
     mediumID: string().from("medium_id"),
     body: string(),
     timestamp: number(),
+    t: number(),
   })
   .primaryKey("id");
 
