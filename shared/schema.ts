@@ -17,6 +17,7 @@ import {
   PermissionsConfig,
   UpdateValue,
   number,
+  createBuilder,
 } from "@rocicorp/zero";
 import { AuthData } from "./auth";
 
@@ -42,6 +43,7 @@ const message = table("message")
     mediumID: string().from("medium_id"),
     body: string(),
     timestamp: number(),
+    t: number(),
   })
   .primaryKey("id");
 
@@ -89,7 +91,4 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
   } satisfies PermissionsConfig<AuthData, Schema>;
 });
 
-export default {
-  schema,
-  permissions,
-};
+export const builder = createBuilder(schema);

@@ -38,5 +38,6 @@ export function randomMessage(
     mediumID,
     body: messages[randInt(messages.length)],
     timestamp,
+    t: 1000 * 60 * 60,
   };
 }
