@@ -1,18 +1,18 @@
-import { CustomMutatorDefs } from "@rocicorp/zero";
+import { Transaction } from "@rocicorp/zero";
 import { AuthData } from "./auth";
-import { schema, Message, MessageUpdate } from "./schema";
+import { Schema, Message, MessageUpdate } from "./schema";
 
 export function createMutators(authData: AuthData | undefined) {
   return {
     message: {
-      async create(tx, message: Message) {
+      async create(tx: Transaction<Schema>, message: Message) {
         await tx.mutate.message.insert(message);
       },
-      async delete(tx, id: string) {
+      async delete(tx: Transaction<Schema>, id: string) {
         mustBeLoggedIn(authData);
         await tx.mutate.message.delete({ id });
       },
-      async update(tx, message: MessageUpdate) {
+      async update(tx: Transaction<Schema>, message: MessageUpdate) {
         const auth = mustBeLoggedIn(authData);
         const prev = await tx.query.message.where("id", message.id).one();
         if (!prev) {
@@ -24,7 +24,7 @@ export function createMutators(authData: AuthData | undefined) {
         await tx.mutate.message.update(message);
       },
     },
-  } as const satisfies CustomMutatorDefs<typeof schema>;
+  };
 }
 
 function mustBeLoggedIn(authData: AuthData | undefined): AuthData {
