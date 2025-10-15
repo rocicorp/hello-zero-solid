@@ -9,17 +9,14 @@ import {
   createSchema,
   definePermissions,
   Row,
-  ANYONE_CAN,
   table,
   string,
   boolean,
   relationships,
-  PermissionsConfig,
   UpdateValue,
   number,
   createBuilder,
 } from "@rocicorp/zero";
-import { AuthData } from "./auth";
 
 const user = table("user")
   .columns({
@@ -72,24 +69,9 @@ export type MessageUpdate = UpdateValue<typeof schema.tables.message>;
 export type Medium = Row<typeof schema.tables.medium>;
 export type User = Row<typeof schema.tables.user>;
 
-export const permissions = definePermissions<AuthData, Schema>(schema, () => {
-  return {
-    medium: {
-      row: {
-        select: ANYONE_CAN,
-      },
-    },
-    user: {
-      row: {
-        select: ANYONE_CAN,
-      },
-    },
-    message: {
-      row: {
-        select: ANYONE_CAN,
-      },
-    },
-  } satisfies PermissionsConfig<AuthData, Schema>;
+// TODO: Zero requires an empty permissions object even if we're not using them :(
+export const permissions = definePermissions<unknown, Schema>(schema, () => {
+  return {};
 });
 
 export const builder = createBuilder(schema);
