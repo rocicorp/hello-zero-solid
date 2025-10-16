@@ -135,32 +135,5 @@ export default $config({
         },
       },
     });
-
-    // Permissions deployment
-    // We build the permission update as part of the build command in
-    // package.json and deploy it with this lambda. This prevents the
-    // CI/CD env from needing access to database.
-    // If you are willing to expose your database to CI, then a simpler
-    // option is possible. See:
-    // https://github.com/rocicorp/hello-zero/blob/main/sst.config.ts#L142
-    const permissionsDeployer = new sst.aws.Function(
-      "zero-permissions-deployer",
-      {
-        handler: "./functions/permissions.deploy",
-        vpc,
-        environment: { ["ZERO_UPSTREAM_DB"]: conn.value },
-        copyFiles: [{ from: ".permissions.sql", to: ".permissions.sql" }],
-      }
-    );
-
-    new aws.lambda.Invocation(
-      "invoke-zero-permissions-deployer",
-      {
-        // Invoke the Lambda on every deploy.
-        input: Date.now().toString(),
-        functionName: permissionsDeployer.name,
-      },
-      { dependsOn: viewSyncer }
-    );
   },
 });

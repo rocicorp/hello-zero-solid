@@ -26,7 +26,6 @@ dist-ssr
 
 # zero
 zero-schema.json
-.permissions.sql
 
 # sst
 .sst

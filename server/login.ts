@@ -1,7 +1,7 @@
 import { randomInt } from "crypto";
-import { SignJWT } from "jose";
-import { setCookie } from "hono/cookie";
+import { getSignedCookie, setSignedCookie } from "hono/cookie";
 import { Context } from "hono";
+import { must } from "../shared/must";
 
 // See seed.sql
 // In real life you would of course authenticate the user however you like.
@@ -17,20 +17,19 @@ const userIDs = [
   "9ogaDuDNFx",
 ];
 
-export async function handleLogin(c: Context, secret: Uint8Array) {
-  const jwtPayload = {
-    sub: userIDs[randomInt(userIDs.length)],
-    iat: Math.floor(Date.now() / 1000),
-  };
+const secretKey = must(process.env.AUTH_SECRET, "required env var AUTH_SECRET");
 
-  const jwt = await new SignJWT(jwtPayload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("30days")
-    .sign(secret);
-
-  setCookie(c, "jwt", jwt, {
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  });
-
+export async function handleLogin(c: Context) {
+  // Pick a random user ID from the userIDs array
+  const userID = userIDs[randomInt(userIDs.length)];
+  await setSignedCookie(c, "auth", userID, secretKey);
   return c.text("ok");
+}
+
+export async function getUserID(c: Context) {
+  const cookie = await getSignedCookie(c, secretKey, "auth");
+  if (!cookie) {
+    return undefined;
+  }
+  return cookie;
 }
