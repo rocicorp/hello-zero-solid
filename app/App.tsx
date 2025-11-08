@@ -102,7 +102,7 @@ function App() {
     if (z.userID === "anon") {
       await fetch("/api/login");
     } else {
-      Cookies.remove("jwt");
+      Cookies.remove("auth");
     }
     location.reload();
   };
