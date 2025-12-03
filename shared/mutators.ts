@@ -14,7 +14,10 @@ export function createMutators(userID: string | undefined) {
       },
       async update(tx: Transaction<Schema>, message: MessageUpdate) {
         mustBeLoggedIn(userID);
-        const prev = await tx.query.message.where("id", message.id).one().run();
+        // TODO: Put this back when regression fixed.
+        const prev = await tx.run(
+          tx.query.message.where("id", message.id).one()
+        );
         if (!prev) {
           return;
         }
