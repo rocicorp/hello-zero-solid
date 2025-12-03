@@ -11,18 +11,18 @@ import { mutators } from "../shared/mutators";
 function App() {
   const z = useZero<Schema>()();
 
-  const [users] = useQuery(queries.users);
-  const [mediums] = useQuery(queries.mediums);
+  const [users] = useQuery(queries.user.all);
+  const [mediums] = useQuery(queries.medium.all);
 
   const [filterUser, setFilterUser] = createSignal<string>("");
   const [filterMedium, setFilterMedium] = createSignal<string>("");
   const [filterText, setFilterText] = createSignal<string>("");
   const [filterDate, setFilterDate] = createSignal<string>("");
 
-  const [allMessages] = useQuery(queries.messages);
+  const [allMessages] = useQuery(queries.message.all);
 
   const [filteredMessages] = useQuery(() =>
-    queries.filteredMessages({
+    queries.message.filtered({
       senderID: filterUser(),
       mediumID: filterMedium(),
       body: filterText(),

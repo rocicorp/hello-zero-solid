@@ -1,23 +1,19 @@
-import { handleGetQueriesRequest } from "@rocicorp/zero/server";
-import { withValidation } from "@rocicorp/zero";
+import { handleTransformRequest } from "@rocicorp/zero/server";
+import { mustGetQuery } from "@rocicorp/zero";
 import { queries } from "../shared/queries";
 import { schema } from "../shared/schema";
-import { ReadonlyJSONValue } from "@rocicorp/zero";
+import { getUserID } from "./login";
+import { Context } from "hono";
 
-const validated = Object.fromEntries(
-  Object.values(queries).map((q) => [q.queryName, withValidation(q)])
-);
-
-export async function handleGetQueries(request: Request) {
-  return await handleGetQueriesRequest(getQuery, schema, request);
-}
-
-function getQuery(name: string, args: readonly ReadonlyJSONValue[]) {
-  const q = validated[name];
-  if (!q) {
-    throw new Error(`No such query: ${name}`);
-  }
-  return {
-    query: q(undefined, ...args),
-  };
+export async function handleGetQueries(c: Context) {
+  const userID = await getUserID(c);
+  const ctx = userID ? { userID } : undefined;
+  return handleTransformRequest(
+    (name, args) => {
+      const query = mustGetQuery(queries, name);
+      return query(args).toQuery(ctx);
+    },
+    schema,
+    c.req.raw
+  );
 }

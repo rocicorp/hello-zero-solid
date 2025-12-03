@@ -14,7 +14,7 @@ app.post("/mutate", async (c) => {
 });
 
 app.post("/get-queries", async (c) => {
-  return await c.json(await handleGetQueries(c.req.raw));
+  return await c.json(await handleGetQueries(c));
 });
 
 export default handle(app);
