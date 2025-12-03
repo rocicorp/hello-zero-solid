@@ -2,7 +2,7 @@ import { Transaction } from "@rocicorp/zero";
 import { Schema, Message, MessageUpdate } from "./schema";
 import { must } from "./must";
 
-export function createMutators(userID: string) {
+export function createMutators(userID: string | undefined) {
   return {
     message: {
       async create(tx: Transaction<Schema>, message: Message) {
@@ -27,7 +27,7 @@ export function createMutators(userID: string) {
   };
 }
 
-function mustBeLoggedIn(userID: string) {
+function mustBeLoggedIn(userID: string | undefined) {
   must(userID, "Must be logged in");
 }
 

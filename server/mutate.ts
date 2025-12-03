@@ -21,5 +21,5 @@ const processor = new PushProcessor(
 
 export async function handleMutate(c: Context) {
   const userID = await getUserID(c);
-  return await processor.process(createMutators(userID ?? ""), c.req.raw);
+  return await processor.process(createMutators(userID), c.req.raw);
 }
