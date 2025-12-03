@@ -60,7 +60,7 @@ export const schema = createSchema({
   tables: [user, medium, message],
   relationships: [messageRelationships],
   enableLegacyMutators: false,
-  enableLegacyQueries: false,
+  enableLegacyQueries: true,
 });
 
 export type Schema = typeof schema;

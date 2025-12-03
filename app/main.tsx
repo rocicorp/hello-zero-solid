@@ -15,8 +15,6 @@ const zeroOptions = {
   server: import.meta.env.VITE_PUBLIC_SERVER,
   schema,
   mutators: createMutators(userID),
-  enableLegacyMutators: false,
-  enableLegacyQueries: false,
 };
 
 const root = document.getElementById("root");
