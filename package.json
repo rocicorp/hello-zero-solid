@@ -9,7 +9,7 @@
     "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
     "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up",
     "dev:ui": "VITE_PUBLIC_SERVER='http://localhost:4848' vite",
-    "dev:zero-cache": "zero-cache-dev -p shared/schema.ts",
+    "dev:zero-cache": "zero-cache-dev",
     "lint": "eslint ."
   },
   "dependencies": {

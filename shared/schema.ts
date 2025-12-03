@@ -7,7 +7,6 @@
 
 import {
   createSchema,
-  definePermissions,
   Row,
   table,
   string,
@@ -68,10 +67,5 @@ export type Message = Row<typeof schema.tables.message>;
 export type MessageUpdate = UpdateValue<typeof schema.tables.message>;
 export type Medium = Row<typeof schema.tables.medium>;
 export type User = Row<typeof schema.tables.user>;
-
-// TODO: Zero requires an empty permissions object even if we're not using them :(
-export const permissions = definePermissions<unknown, Schema>(schema, () => {
-  return {};
-});
 
 export const builder = createBuilder(schema);
