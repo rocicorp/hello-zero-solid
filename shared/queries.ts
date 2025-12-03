@@ -1,16 +1,16 @@
 import { escapeLike, defineQueries, defineQuery } from "@rocicorp/zero";
 import z from "zod";
-import { builder } from "./schema";
+import { zql } from "./schema";
 
 export const queries = defineQueries({
   user: {
-    all: defineQuery(() => builder.user),
+    all: defineQuery(() => zql.user),
   },
   medium: {
-    all: defineQuery(() => builder.medium),
+    all: defineQuery(() => zql.medium),
   },
   message: {
-    all: defineQuery(() => builder.message.orderBy("timestamp", "desc")),
+    all: defineQuery(() => zql.message.orderBy("timestamp", "desc")),
     filtered: defineQuery(
       z.object({
         senderID: z.string(),
@@ -19,7 +19,7 @@ export const queries = defineQueries({
         timestamp: z.string(),
       }),
       ({ args: { senderID, mediumID, body, timestamp } }) => {
-        let q = builder.message
+        let q = zql.message
           .related("medium", (q) => q.one())
           .related("sender", (q) => q.one())
           .orderBy("timestamp", "desc");

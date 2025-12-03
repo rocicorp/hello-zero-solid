@@ -2,7 +2,7 @@ import { defineMutator, defineMutators } from "@rocicorp/zero";
 import { must } from "./must";
 import z from "zod";
 import { Context } from "./context";
-import { builder } from "./schema";
+import { zql } from "./schema";
 
 export const mutators = defineMutators({
   message: {
@@ -36,9 +36,7 @@ export const mutators = defineMutators({
       }),
       async ({ tx, args: { message }, ctx }) => {
         mustBeLoggedIn(ctx);
-        const prev = await tx.run(
-          builder.message.where("id", message.id).one()
-        );
+        const prev = await tx.run(zql.message.where("id", message.id).one());
         if (!prev) {
           return;
         }

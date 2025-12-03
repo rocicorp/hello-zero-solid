@@ -68,4 +68,4 @@ export type MessageUpdate = UpdateValue<typeof schema.tables.message>;
 export type Medium = Row<typeof schema.tables.medium>;
 export type User = Row<typeof schema.tables.user>;
 
-export const builder = createBuilder(schema);
+export const zql = createBuilder(schema);
