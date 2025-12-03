@@ -17,7 +17,7 @@ render(
   () => (
     <ZeroProvider
       {...{
-        server: import.meta.env.VITE_PUBLIC_SERVER,
+        cacheURL: import.meta.env.VITE_PUBLIC_ZERO_CACHE_URL,
         schema,
         userID,
         context,
