@@ -1,15 +1,15 @@
 import { useQuery, useZero } from "@rocicorp/zero/solid";
 import Cookies from "js-cookie";
 import { createEffect, createSignal, For, Show } from "solid-js";
-import { Mutators } from "../shared/mutators";
 import { Schema } from "../shared/schema";
 import { formatDate } from "./date";
 import { randInt } from "./rand";
 import { randomMessage } from "./test-data";
 import { queries } from "../shared/queries";
+import { mutators } from "../shared/mutators";
 
 function App() {
-  const z = useZero<Schema, Mutators>()();
+  const z = useZero<Schema>()();
 
   const [users] = useQuery(queries.users);
   const [mediums] = useQuery(queries.mediums);
@@ -52,7 +52,7 @@ function App() {
       return false;
     }
     if (action() === "add") {
-      z.mutate.message.create(randomMessage(users(), mediums()));
+      z.mutate(mutators.message.create(randomMessage(users(), mediums())));
       return true;
     } else {
       const messages = allMessages();
@@ -60,7 +60,7 @@ function App() {
         return false;
       }
       const index = randInt(messages.length);
-      z.mutate.message.delete(messages[index].id);
+      z.mutate(mutators.message.delete({ id: messages[index].id }));
       return true;
     }
   };
@@ -92,10 +92,14 @@ function App() {
       return;
     }
     const body = prompt("Edit message", prev);
-    z.mutate.message.update({
-      id,
-      body: body ?? prev,
-    });
+    z.mutate(
+      mutators.message.update({
+        message: {
+          id,
+          body: body ?? prev,
+        },
+      })
+    );
   };
 
   const toggleLogin = async () => {
