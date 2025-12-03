@@ -7,6 +7,7 @@ import { randInt } from "./rand";
 import { randomMessage } from "./test-data";
 import { queries } from "../shared/queries";
 import { mutators } from "../shared/mutators";
+import { Status } from "./Status";
 
 function App() {
   const z = useZero<Schema>()();
@@ -138,6 +139,7 @@ function App() {
           <button onMouseDown={() => toggleLogin()}>
             {user() === "anon" ? "Login" : "Logout"}
           </button>
+          <Status />
         </div>
       </div>
       <div class="controls">
