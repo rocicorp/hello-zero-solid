@@ -69,3 +69,9 @@ export type Medium = Row<typeof schema.tables.medium>;
 export type User = Row<typeof schema.tables.user>;
 
 export const zql = createBuilder(schema);
+
+declare module "@rocicorp/zero" {
+  interface DefaultTypes {
+    schema: typeof schema;
+  }
+}

@@ -1,7 +1,6 @@
 import { useQuery, useZero } from "@rocicorp/zero/solid";
 import Cookies from "js-cookie";
 import { createEffect, createSignal, For, Show } from "solid-js";
-import { Schema } from "../shared/schema";
 import { formatDate } from "./date";
 import { randInt } from "./rand";
 import { randomMessage } from "./test-data";
@@ -10,7 +9,7 @@ import { mutators } from "../shared/mutators";
 import { Status } from "./Status";
 
 function App() {
-  const z = useZero<Schema>()();
+  const z = useZero()();
 
   const [users] = useQuery(queries.user.all);
   const [mediums] = useQuery(queries.medium.all);
