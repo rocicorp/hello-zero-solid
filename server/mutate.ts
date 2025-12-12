@@ -5,7 +5,7 @@ import { must } from "../shared/must";
 import { schema } from "../shared/schema";
 import { createMutators } from "../shared/mutators";
 import { Context } from "hono";
-import { getUserID } from "./login";
+import { getUserID } from "./login.js";
 
 const processor = new PushProcessor(
   zeroPostgresJS(

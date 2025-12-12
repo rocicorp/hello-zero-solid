@@ -1,9 +1,9 @@
 import "dotenv/config";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import { handleLogin } from "./login";
-import { handleMutate } from "./mutate";
-import { handleGetQueries } from "./get-queries";
+import { handleLogin } from "./login.js";
+import { handleMutate } from "./mutate.js";
+import { handleGetQueries } from "./get-queries.js";
 
 export const app = new Hono().basePath("/api");
 
