@@ -2,7 +2,7 @@
   "buildCommand": "npm run build",
   "functions": {
     "api/**/*.ts": {
-      "includeFiles": "server/**/*.js"
+      "includeFiles": "dist/server/**"
     }
   }
 }
