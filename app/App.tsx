@@ -9,7 +9,7 @@ import { mutators } from "../shared/mutators";
 import { Status } from "./Status";
 
 function App() {
-  const z = useZero()();
+  const zero = useZero();
 
   const [users] = useQuery(queries.user.all);
   const [mediums] = useQuery(queries.medium.all);
@@ -52,7 +52,7 @@ function App() {
       return false;
     }
     if (action() === "add") {
-      z.mutate(mutators.message.create(randomMessage(users(), mediums())));
+      zero().mutate(mutators.message.create(randomMessage(users(), mediums())));
       return true;
     } else {
       const messages = allMessages();
@@ -60,7 +60,7 @@ function App() {
         return false;
       }
       const index = randInt(messages.length);
-      z.mutate(mutators.message.delete({ id: messages[index].id }));
+      zero().mutate(mutators.message.delete({ id: messages[index].id }));
       return true;
     }
   };
@@ -68,7 +68,7 @@ function App() {
   const addMessages = () => setAction("add");
 
   const removeMessages = (e: MouseEvent) => {
-    if (z.userID === "anon" && !e.shiftKey) {
+    if (zero().userID === "anon" && !e.shiftKey) {
       alert(
         "You must be logged in to delete. Hold the shift key to try anyway."
       );
@@ -85,14 +85,14 @@ function App() {
     senderID: string,
     prev: string
   ) => {
-    if (senderID !== z.userID && !e.shiftKey) {
+    if (senderID !== zero().userID && !e.shiftKey) {
       alert(
         "You aren't logged in as the sender of this message. Editing won't be permitted. Hold the shift key to try anyway."
       );
       return;
     }
     const body = prompt("Edit message", prev);
-    z.mutate(
+    zero().mutate(
       mutators.message.update({
         message: {
           id,
@@ -103,7 +103,7 @@ function App() {
   };
 
   const toggleLogin = async () => {
-    if (z.userID === "anon") {
+    if (zero().userID === "anon") {
       await fetch("/api/login");
     } else {
       Cookies.remove("auth");
@@ -115,7 +115,7 @@ function App() {
   const initialSyncComplete = () => users().length && mediums().length;
 
   const user = () =>
-    users().find((user) => user.id === z.userID)?.name ?? "anon";
+    users().find((user) => user.id === zero().userID)?.name ?? "anon";
 
   return (
     <Show when={initialSyncComplete()}>

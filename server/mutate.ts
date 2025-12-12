@@ -4,7 +4,7 @@ import { must } from "../shared/must";
 import { schema } from "../shared/schema";
 import { Context } from "hono";
 import { getUserID } from "./login";
-import { handleMutationRequest } from "@rocicorp/zero/server";
+import { handleMutateRequest } from "@rocicorp/zero/server";
 import { mustGetMutator } from "@rocicorp/zero";
 import { mutators } from "../shared/mutators";
 
@@ -21,7 +21,7 @@ const dbProvider = zeroPostgresJS(
 export async function handleMutate(c: Context) {
   const userID = await getUserID(c);
   const ctx = userID ? { userID } : undefined;
-  return handleMutationRequest(
+  return handleMutateRequest(
     dbProvider,
     (transact) => {
       return transact((tx, name, args) => {

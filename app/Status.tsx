@@ -1,7 +1,7 @@
-import { useZeroConnectionState } from "@rocicorp/zero/solid";
+import { useConnectionState } from "@rocicorp/zero/solid";
 
 export function Status() {
-  const state = useZeroConnectionState();
+  const state = useConnectionState();
 
   return (
     <>
