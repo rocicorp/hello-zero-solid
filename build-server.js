@@ -6,8 +6,14 @@ await esbuild.build({
   platform: 'node',
   target: 'node18',
   format: 'esm',
-  outfile: './dist/server/index.js',
-  external: ['postgres', '@rocicorp/zero', 'dotenv', 'hono'],
+  outfile: './api/server-bundle.js',
+  external: [
+    'postgres',
+    '@rocicorp/zero',
+    'hono',
+    'hono/cookie',
+    'hono/vercel'
+  ],
   banner: {
     js: `
 import { createRequire } from 'module';

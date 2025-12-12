@@ -1,8 +1,3 @@
 {
-  "buildCommand": "npm run build",
-  "functions": {
-    "api/**/*.ts": {
-      "includeFiles": "dist/server/**"
-    }
-  }
+  "buildCommand": "npm run build"
 }
