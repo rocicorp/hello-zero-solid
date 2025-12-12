@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "node build-server.js && tsc -b && vite build",
+    "build": "tsc -b && vite build && node build-server.js",
     "build:server": "node build-server.js",
     "dev:clean": "source .env && docker volume rm -f docker_zstart_solid_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
