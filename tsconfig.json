@@ -1,4 +1,12 @@
 {
+  "compilerOptions": {
+    // Make Vercel's Node builder use bundler-style resolution so we don't need .js extensions.
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+    "jsx": "preserve"
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
