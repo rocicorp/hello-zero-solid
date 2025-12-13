@@ -1,28 +1,28 @@
 import { useQuery, useZero } from "@rocicorp/zero/solid";
 import Cookies from "js-cookie";
 import { createEffect, createSignal, For, Show } from "solid-js";
-import { Mutators } from "../shared/mutators";
-import { Schema } from "../shared/schema";
 import { formatDate } from "./date";
 import { randInt } from "./rand";
 import { randomMessage } from "./test-data";
 import { queries } from "../shared/queries";
+import { mutators } from "../shared/mutators";
+import { Status } from "./Status";
 
 function App() {
-  const z = useZero<Schema, Mutators>()();
+  const zero = useZero();
 
-  const [users] = useQuery(queries.users);
-  const [mediums] = useQuery(queries.mediums);
+  const [users] = useQuery(queries.user.all);
+  const [mediums] = useQuery(queries.medium.all);
 
   const [filterUser, setFilterUser] = createSignal<string>("");
   const [filterMedium, setFilterMedium] = createSignal<string>("");
   const [filterText, setFilterText] = createSignal<string>("");
   const [filterDate, setFilterDate] = createSignal<string>("");
 
-  const [allMessages] = useQuery(queries.messages);
+  const [allMessages] = useQuery(queries.message.all);
 
   const [filteredMessages] = useQuery(() =>
-    queries.filteredMessages({
+    queries.message.filtered({
       senderID: filterUser(),
       mediumID: filterMedium(),
       body: filterText(),
@@ -52,7 +52,7 @@ function App() {
       return false;
     }
     if (action() === "add") {
-      z.mutate.message.create(randomMessage(users(), mediums()));
+      zero().mutate(mutators.message.create(randomMessage(users(), mediums())));
       return true;
     } else {
       const messages = allMessages();
@@ -60,7 +60,7 @@ function App() {
         return false;
       }
       const index = randInt(messages.length);
-      z.mutate.message.delete(messages[index].id);
+      zero().mutate(mutators.message.delete({ id: messages[index].id }));
       return true;
     }
   };
@@ -68,7 +68,7 @@ function App() {
   const addMessages = () => setAction("add");
 
   const removeMessages = (e: MouseEvent) => {
-    if (z.userID === "anon" && !e.shiftKey) {
+    if (zero().userID === "anon" && !e.shiftKey) {
       alert(
         "You must be logged in to delete. Hold the shift key to try anyway."
       );
@@ -85,21 +85,25 @@ function App() {
     senderID: string,
     prev: string
   ) => {
-    if (senderID !== z.userID && !e.shiftKey) {
+    if (senderID !== zero().userID && !e.shiftKey) {
       alert(
         "You aren't logged in as the sender of this message. Editing won't be permitted. Hold the shift key to try anyway."
       );
       return;
     }
     const body = prompt("Edit message", prev);
-    z.mutate.message.update({
-      id,
-      body: body ?? prev,
-    });
+    zero().mutate(
+      mutators.message.update({
+        message: {
+          id,
+          body: body ?? prev,
+        },
+      })
+    );
   };
 
   const toggleLogin = async () => {
-    if (z.userID === "anon") {
+    if (zero().userID === "anon") {
       await fetch("/api/login");
     } else {
       Cookies.remove("auth");
@@ -111,7 +115,7 @@ function App() {
   const initialSyncComplete = () => users().length && mediums().length;
 
   const user = () =>
-    users().find((user) => user.id === z.userID)?.name ?? "anon";
+    users().find((user) => user.id === zero().userID)?.name ?? "anon";
 
   return (
     <Show when={initialSyncComplete()}>
@@ -134,6 +138,7 @@ function App() {
           <button onMouseDown={() => toggleLogin()}>
             {user() === "anon" ? "Login" : "Logout"}
           </button>
+          <Status />
         </div>
       </div>
       <div class="controls">

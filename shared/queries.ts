@@ -1,50 +1,48 @@
-import { syncedQuery, escapeLike } from "@rocicorp/zero";
+import { escapeLike, defineQueries, defineQuery } from "@rocicorp/zero";
 import z from "zod";
-import { builder } from "./schema";
+import { zql } from "./schema";
 
-export const queries = {
-  users: syncedQuery("user", z.tuple([]), () => builder.user),
-
-  mediums: syncedQuery("medium", z.tuple([]), () => builder.medium),
-
-  messages: syncedQuery("messages", z.tuple([]), () =>
-    builder.message.orderBy("timestamp", "desc")
-  ),
-
-  filteredMessages: syncedQuery(
-    "filteredMessages",
-    z.tuple([
+export const queries = defineQueries({
+  user: {
+    all: defineQuery(() => zql.user),
+  },
+  medium: {
+    all: defineQuery(() => zql.medium),
+  },
+  message: {
+    all: defineQuery(() => zql.message.orderBy("timestamp", "desc")),
+    filtered: defineQuery(
       z.object({
         senderID: z.string(),
         mediumID: z.string(),
         body: z.string(),
         timestamp: z.string(),
       }),
-    ]),
-    ({ senderID, mediumID, body, timestamp }) => {
-      let q = builder.message
-        .related("medium", (q) => q.one())
-        .related("sender", (q) => q.one())
-        .orderBy("timestamp", "desc");
+      ({ args: { senderID, mediumID, body, timestamp } }) => {
+        let q = zql.message
+          .related("medium", (q) => q.one())
+          .related("sender", (q) => q.one())
+          .orderBy("timestamp", "desc");
 
-      if (senderID) {
-        q = q.where("senderID", senderID);
-      }
-      if (mediumID) {
-        q = q.where("mediumID", mediumID);
-      }
-      if (body) {
-        q = q.where("body", "LIKE", `%${escapeLike(body)}%`);
-      }
-      if (timestamp) {
-        q = q.where(
-          "timestamp",
-          ">=",
-          timestamp ? new Date(timestamp).getTime() : 0
-        );
-      }
+        if (senderID) {
+          q = q.where("senderID", senderID);
+        }
+        if (mediumID) {
+          q = q.where("mediumID", mediumID);
+        }
+        if (body) {
+          q = q.where("body", "LIKE", `%${escapeLike(body)}%`);
+        }
+        if (timestamp) {
+          q = q.where(
+            "timestamp",
+            ">=",
+            timestamp ? new Date(timestamp).getTime() : 0
+          );
+        }
 
-      return q;
-    }
-  ),
-};
+        return q;
+      }
+    ),
+  },
+});

@@ -5,25 +5,25 @@ import "./index.css";
 import { schema } from "../shared/schema.ts";
 import Cookies from "js-cookie";
 import { ZeroProvider } from "@rocicorp/zero/solid";
-import { createMutators } from "../shared/mutators.ts";
+import { mutators } from "../shared/mutators.ts";
 
 const signedCookie = Cookies.get("auth");
 const userID = signedCookie ? signedCookie.split(".")[0] : "anon";
-
-const zeroOptions = {
-  userID,
-  server: import.meta.env.VITE_PUBLIC_SERVER,
-  schema,
-  mutators: createMutators(userID),
-  enableLegacyMutators: false,
-  enableLegacyQueries: false,
-};
+const context = signedCookie ? { userID } : undefined;
 
 const root = document.getElementById("root");
 
 render(
   () => (
-    <ZeroProvider {...zeroOptions}>
+    <ZeroProvider
+      {...{
+        cacheURL: import.meta.env.VITE_PUBLIC_ZERO_CACHE_URL,
+        schema,
+        userID,
+        context,
+        mutators,
+      }}
+    >
       <App />
     </ZeroProvider>
   ),

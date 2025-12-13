@@ -8,12 +8,12 @@
     "dev:clean": "source .env && docker volume rm -f docker_zstart_solid_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
     "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up",
-    "dev:ui": "VITE_PUBLIC_SERVER='http://localhost:4848' vite",
-    "dev:zero-cache": "zero-cache-dev -p shared/schema.ts",
+    "dev:ui": "VITE_PUBLIC_ZERO_CACHE_URL='http://localhost:4848' vite",
+    "dev:zero-cache": "zero-cache-dev",
     "lint": "eslint ."
   },
   "dependencies": {
-    "@rocicorp/zero": "0.24.2025101500",
+    "@rocicorp/zero": "0.25.1",
     "js-cookie": "^3.0.5",
     "postgres": "^3.4.5",
     "solid-js": "^1.9.3",

@@ -1,34 +1,54 @@
-import { Transaction } from "@rocicorp/zero";
-import { Schema, Message, MessageUpdate } from "./schema";
+import { defineMutator, defineMutators } from "@rocicorp/zero";
 import { must } from "./must";
+import z from "zod";
+import { Context } from "./context";
+import { zql } from "./schema";
 
-export function createMutators(userID: string | undefined) {
-  return {
-    message: {
-      async create(tx: Transaction<Schema>, message: Message) {
-        await tx.mutate.message.insert(message);
-      },
-      async delete(tx: Transaction<Schema>, id: string) {
-        mustBeLoggedIn(userID);
+export const mutators = defineMutators({
+  message: {
+    create: defineMutator(
+      z.object({
+        id: z.string(),
+        mediumID: z.string(),
+        senderID: z.string(),
+        body: z.string(),
+        timestamp: z.number(),
+      }),
+      async ({ tx, args }) => {
+        await tx.mutate.message.insert(args);
+      }
+    ),
+    delete: defineMutator(
+      z.object({
+        id: z.string(),
+      }),
+      async ({ tx, args: { id }, ctx }) => {
+        mustBeLoggedIn(ctx);
         await tx.mutate.message.delete({ id });
-      },
-      async update(tx: Transaction<Schema>, message: MessageUpdate) {
-        mustBeLoggedIn(userID);
-        const prev = await tx.query.message.where("id", message.id).one().run();
+      }
+    ),
+    update: defineMutator(
+      z.object({
+        message: z.object({
+          id: z.string(),
+          body: z.string(),
+        }),
+      }),
+      async ({ tx, args: { message }, ctx }) => {
+        mustBeLoggedIn(ctx);
+        const prev = await tx.run(zql.message.where("id", message.id).one());
         if (!prev) {
           return;
         }
-        if (prev.senderID !== userID) {
+        if (prev.senderID !== ctx.userID) {
           throw new Error("Must be sender of message to edit");
         }
         await tx.mutate.message.update(message);
-      },
-    },
-  };
-}
+      }
+    ),
+  },
+});
 
-function mustBeLoggedIn(userID: string | undefined) {
-  must(userID, "Must be logged in");
+function mustBeLoggedIn(ctx: Context): asserts ctx {
+  must(ctx, "Must be logged in");
 }
-
-export type Mutators = ReturnType<typeof createMutators>;

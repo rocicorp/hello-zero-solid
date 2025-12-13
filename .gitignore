@@ -25,7 +25,7 @@ dist-ssr
 *.sw?
 
 # zero
-zero-schema.json
+zero.db*
 
 # sst
 .sst
