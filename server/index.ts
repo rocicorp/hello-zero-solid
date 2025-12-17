@@ -1,6 +1,5 @@
-import "dotenv/config";
 import { Hono } from "hono";
-import { handle } from "hono/vercel";
+import { getRequestListener } from "@hono/node-server";
 import { handleLogin } from "./login";
 import { handleMutate } from "./mutate";
 import { handleQuery } from "./query";
@@ -17,4 +16,4 @@ app.post("/query", async (c) => {
   return await c.json(await handleQuery(c));
 });
 
-export default handle(app);
+export default getRequestListener((req) => app.fetch(req, {}));

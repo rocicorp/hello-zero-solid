@@ -1,9 +1,13 @@
+import "dotenv/config";
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 import { getRequestListener } from "@hono/node-server";
 import { app } from "./server/index.js";
 
 export default defineConfig({
+  // Allow Vercel-style public env vars without forcing a VITE_ prefix.
+  // These still get baked at build time (as Vite intends).
+  envPrefix: ["VITE_", "PUBLIC_"],
   optimizeDeps: {
     esbuildOptions: {
       supported: {
