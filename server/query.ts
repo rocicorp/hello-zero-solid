@@ -1,8 +1,8 @@
 import { handleQueryRequest } from "@rocicorp/zero/server";
 import { mustGetQuery } from "@rocicorp/zero";
-import { queries } from "../shared/queries";
-import { schema } from "../shared/schema";
-import { getUserID } from "./login";
+import { queries } from "../shared/queries.js";
+import { schema } from "../shared/schema.js";
+import { getUserID } from "./login.js";
 import { Context } from "hono";
 
 export async function handleQuery(c: Context) {

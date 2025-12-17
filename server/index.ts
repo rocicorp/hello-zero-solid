@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { getRequestListener } from "@hono/node-server";
-import { handleLogin } from "./login";
-import { handleMutate } from "./mutate";
-import { handleQuery } from "./query";
+import { handleLogin } from "./login.js";
+import { handleMutate } from "./mutate.js";
+import { handleQuery } from "./query.js";
 
 export const app = new Hono().basePath("/api");
 

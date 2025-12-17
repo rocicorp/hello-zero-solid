@@ -1,8 +1,8 @@
 import { defineMutator, defineMutators } from "@rocicorp/zero";
-import { must } from "./must";
+import { must } from "./must.js";
 import z from "zod";
-import { Context } from "./context";
-import { zql } from "./schema";
+import { Context } from "./context.js";
+import { zql } from "./schema.js";
 
 export const mutators = defineMutators({
   message: {

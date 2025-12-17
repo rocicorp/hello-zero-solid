@@ -1,6 +1,6 @@
 import { escapeLike, defineQueries, defineQuery } from "@rocicorp/zero";
 import z from "zod";
-import { zql } from "./schema";
+import { zql } from "./schema.js";
 
 export const queries = defineQueries({
   user: {

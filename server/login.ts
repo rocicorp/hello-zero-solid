@@ -1,7 +1,7 @@
 import { randomInt } from "crypto";
 import { getSignedCookie, setSignedCookie } from "hono/cookie";
 import { Context } from "hono";
-import { must } from "../shared/must";
+import { must } from "../shared/must.js";
 
 // See seed.sql
 // In real life you would of course authenticate the user however you like.
