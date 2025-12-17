@@ -2,7 +2,7 @@ import "dotenv/config";
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 import { getRequestListener } from "@hono/node-server";
-import { app } from "./server/index.js";
+import { app } from "./index.js";
 
 export default defineConfig({
   // Allow Vercel-style public env vars without forcing a VITE_ prefix.
