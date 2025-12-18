@@ -1,5 +1,5 @@
-import { randBetween, randID, randInt } from "./rand";
-import { Medium, Message, User } from "../shared/schema";
+import type { Medium, Message, User } from "../shared/schema.ts";
+import { randBetween, randID, randInt } from "./rand.ts";
 
 const requests = [
   "Hey guys, is the zero package ready yet?",

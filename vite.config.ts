@@ -1,7 +1,8 @@
+import { getRequestListener } from "@hono/node-server";
+import "dotenv/config";
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
-import { getRequestListener } from "@hono/node-server";
-import { app } from "./server/index.js";
+import app from "./api/index.ts";
 
 export default defineConfig({
   optimizeDeps: {

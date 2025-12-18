@@ -11,13 +11,15 @@ const signedCookie = Cookies.get("auth");
 const userID = signedCookie ? signedCookie.split(".")[0] : "anon";
 const context = signedCookie ? { userID } : undefined;
 
+const cacheURL = import.meta.env.VITE_PUBLIC_ZERO_CACHE_URL;
+
 const root = document.getElementById("root");
 
 render(
   () => (
     <ZeroProvider
       {...{
-        cacheURL: import.meta.env.VITE_PUBLIC_ZERO_CACHE_URL,
+        cacheURL,
         schema,
         userID,
         context,

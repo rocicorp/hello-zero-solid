@@ -6,15 +6,15 @@
 // for more complex examples, including many-to-many.
 
 import {
-  createSchema,
-  Row,
-  table,
-  string,
   boolean,
-  relationships,
-  UpdateValue,
-  number,
   createBuilder,
+  createSchema,
+  number,
+  relationships,
+  type Row,
+  string,
+  table,
+  type UpdateValue,
 } from "@rocicorp/zero";
 
 const user = table("user")

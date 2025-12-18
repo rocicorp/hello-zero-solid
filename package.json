@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "dev:clean": "source .env && docker volume rm -f docker_zstart_solid_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
@@ -13,27 +14,27 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@rocicorp/zero": "0.25.2",
+    "@hono/node-server": "^1.19.7",
+    "@rocicorp/zero": "0.25.4",
     "js-cookie": "^3.0.5",
-    "postgres": "^3.4.5",
-    "solid-js": "^1.9.3",
-    "sst": "3.9.26",
-    "zod": "^3.25.76"
+    "postgres": "^3.4.7",
+    "solid-js": "^1.9.10",
+    "sst": "3.17.25",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.9.0",
-    "@hono/node-server": "^1.13.2",
-    "@types/aws-lambda": "8.10.147",
+    "@eslint/js": "^9.39.2",
+    "@types/aws-lambda": "8.10.159",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.7.9",
-    "dotenv": "^16.4.5",
-    "eslint": "^9.9.0",
-    "globals": "^15.9.0",
-    "hono": "^4.6.6",
-    "typescript": "^5.5.3",
-    "typescript-eslint": "^8.0.1",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.39.2",
+    "globals": "^16.5.0",
+    "hono": "^4.11.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.0",
     "vite": "^5.4.1",
-    "vite-plugin-solid": "^2.10.2"
+    "vite-plugin-solid": "^2.11.10"
   },
   "trustedDependencies": [
     "@rocicorp/zero-sqlite3"
