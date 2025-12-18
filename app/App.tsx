@@ -1,12 +1,12 @@
 import { useQuery, useZero } from "@rocicorp/zero/solid";
 import Cookies from "js-cookie";
 import { createEffect, createSignal, For, Show } from "solid-js";
-import { formatDate } from "./date";
-import { randInt } from "./rand";
-import { randomMessage } from "./test-data";
-import { queries } from "../shared/queries";
-import { mutators } from "../shared/mutators";
-import { Status } from "./Status";
+import { mutators } from "../shared/mutators.ts";
+import { queries } from "../shared/queries.ts";
+import { formatDate } from "./date.ts";
+import { randInt } from "./rand.ts";
+import { Status } from "./Status.tsx";
+import { randomMessage } from "./test-data.ts";
 
 function App() {
   const zero = useZero();

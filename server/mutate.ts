@@ -1,12 +1,12 @@
-import postgres from "postgres";
-import { zeroPostgresJS } from "@rocicorp/zero/server/adapters/postgresjs";
-import { must } from "../shared/must.js";
-import { schema } from "../shared/schema.js";
-import { Context } from "hono";
-import { getUserID } from "./login.js";
-import { handleMutateRequest } from "@rocicorp/zero/server";
 import { mustGetMutator } from "@rocicorp/zero";
-import { mutators } from "../shared/mutators.js";
+import { handleMutateRequest } from "@rocicorp/zero/server";
+import { zeroPostgresJS } from "@rocicorp/zero/server/adapters/postgresjs";
+import { type Context } from "hono";
+import postgres from "postgres";
+import { must } from "../shared/must.ts";
+import { mutators } from "../shared/mutators.ts";
+import { schema } from "../shared/schema.ts";
+import { getUserID } from "./login.ts";
 
 const dbProvider = zeroPostgresJS(
   schema,
