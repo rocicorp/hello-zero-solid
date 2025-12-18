@@ -2,8 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "noEmit": true
+    "jsxImportSource": "solid-js"
   },
   "include": ["app", "shared"]
 }
