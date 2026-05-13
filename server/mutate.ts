@@ -21,14 +21,15 @@ const dbProvider = zeroPostgresJS(
 export async function handleMutate(c: Context) {
   const userID = await getUserID(c);
   const ctx = userID ? { userID } : undefined;
-  return handleMutateRequest(
+  return handleMutateRequest({
     dbProvider,
-    (transact) => {
+    handler: (transact) => {
       return transact((tx, name, args) => {
         const mutator = mustGetMutator(mutators, name);
         return mutator.fn({ tx, args, ctx });
       });
     },
-    c.req.raw
-  );
+    request: c.req.raw,
+    userID: userID ?? null,
+  });
 }

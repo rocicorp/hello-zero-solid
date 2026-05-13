@@ -8,8 +8,8 @@ import { ZeroProvider } from "@rocicorp/zero/solid";
 import { mutators } from "../shared/mutators.ts";
 
 const signedCookie = Cookies.get("auth");
-const userID = signedCookie ? signedCookie.split(".")[0] : "anon";
-const context = signedCookie ? { userID } : undefined;
+const context = signedCookie ? { userID: signedCookie.split(".")[0] } : undefined;
+const userID = context?.userID ?? null;
 
 const root = document.getElementById("root");
 

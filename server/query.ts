@@ -8,12 +8,13 @@ import { Context } from "hono";
 export async function handleQuery(c: Context) {
   const userID = await getUserID(c);
   const ctx = userID ? { userID } : undefined;
-  return handleQueryRequest(
-    (name, args) => {
+  return handleQueryRequest({
+    handler: (name, args) => {
       const query = mustGetQuery(queries, name);
       return query.fn({ args, ctx });
     },
     schema,
-    c.req.raw
-  );
+    request: c.req.raw,
+    userID: userID ?? null,
+  });
 }

@@ -68,7 +68,7 @@ function App() {
   const addMessages = () => setAction("add");
 
   const removeMessages = (e: MouseEvent) => {
-    if (zero().userID === "anon" && !e.shiftKey) {
+    if (!zero().userID && !e.shiftKey) {
       alert(
         "You must be logged in to delete. Hold the shift key to try anyway."
       );
@@ -103,7 +103,7 @@ function App() {
   };
 
   const toggleLogin = async () => {
-    if (zero().userID === "anon") {
+    if (!zero().userID) {
       await fetch("/api/login");
     } else {
       Cookies.remove("auth");

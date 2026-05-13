@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b && vite build",
-    "dev:clean": "source .env && docker volume rm -f docker_zstart_solid_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
+    "dev:clean": "source .env && docker volume rm -f docker_zstart_solid_pgdata && rm -rf \"${ZERO_REPLICA_FILE:-zero.db}\"*",
     "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
     "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up",
     "dev:ui": "VITE_PUBLIC_ZERO_CACHE_URL='http://localhost:4848' vite",
@@ -13,11 +13,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@rocicorp/zero": "^1.0.0",
+    "@rocicorp/zero": "1.5.0-canary.4",
     "js-cookie": "^3.0.5",
     "postgres": "^3.4.5",
     "solid-js": "^1.9.3",
-    "sst": "3.9.26",
     "zod": "^3.25.76"
   },
   "devDependencies": {
