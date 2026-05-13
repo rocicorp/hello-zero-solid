@@ -26,6 +26,3 @@ dist-ssr
 
 # zero
 zero.db*
-
-# sst
-.sst
