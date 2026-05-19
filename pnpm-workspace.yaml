@@ -1,0 +1,7 @@
+allowBuilds:
+  '@rocicorp/zero-sqlite3': true
+  esbuild: true
+  protobufjs: true
+
+overrides:
+  postgres: 3.4.7
