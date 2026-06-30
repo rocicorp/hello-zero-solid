@@ -4,7 +4,7 @@ allowBuilds:
   protobufjs: true
 
 minimumReleaseAgeExclude:
-  - '@rocicorp/zero@1.6.0'
+  - '@rocicorp/zero'
 
 overrides:
   postgres: 3.4.7
